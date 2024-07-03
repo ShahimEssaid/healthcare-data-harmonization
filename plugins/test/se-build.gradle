@@ -1,0 +1,41 @@
+buildscript {
+    dependencies {
+        if (gradle.ext.docgenExists) {
+            classpath "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization:docgen"
+        }
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'idea'
+}
+
+if (gradle.ext.docgenExists) {
+    apply plugin: "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.docgen"
+    docgen.destinationDirectory = file("${project.projectDir.toPath().parent.parent}/g3doc")
+}
+
+group "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // TODO(): Set up versioning
+    api group: "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization", name: "runtime"
+
+    if (gradle.ext.has("annotationProcessorExists") && gradle.ext.annotationProcessorExists){
+        annotationProcessor ("${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization:annotation_processor")
+    }
+
+    implementation group: 'com.google.guava', name: 'guava', version: "31.0.1-jre"
+    testImplementation group: "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization", name: "testutil"
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.7.7'
+    testImplementation group: 'com.google.truth', name: 'truth', version: '1.1.3'
+
+    compileOnly         "com.google.auto.value:auto-value-annotations:1.7.4"
+    annotationProcessor "com.google.auto.value:auto-value:1.7.4"
+}

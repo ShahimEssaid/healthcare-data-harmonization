@@ -1,0 +1,50 @@
+import org.gradle.api.publish.maven.MavenPublication
+
+rootProject.name = "se-composite-whistle_core"
+
+gradle.ext.set("docgenExists", true)
+gradle.ext.set("annotationProcessorExists", true)
+
+includeBuild("../se-composite-docgen")
+includeBuild("../se-composite-annotation_processor")
+
+include(":proto")
+project(":proto").projectDir = file("../../proto")
+
+include(":runtime")
+project(":runtime").projectDir = file("../../runtime")
+
+include(":testutil")
+project(":testutil").projectDir = file("../../testutil")
+
+include(":transpiler")
+project(":transpiler").projectDir = file("../../transpiler")
+
+rootProject.children.forEach {
+    it.buildFileName = "se-build.gradle"
+}
+
+gradle.allprojects {
+    apply {
+        plugin("maven-publish")
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    pluginManager.withPlugin("java") {
+        java {
+            withSourcesJar()
+        }
+
+        publishing {
+            publications {
+                maven(MavenPublication){
+                    from components.java
+                }
+            }
+        }
+
+
+    }
+}

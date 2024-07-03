@@ -1,0 +1,38 @@
+import org.gradle.api.publish.maven.MavenPublication
+
+rootProject.name = 'se-composite-plugin-test'
+
+gradle.ext.set("docgenExists", true)
+gradle.ext.set("annotationProcessorExists", true)
+
+includeBuild("../se-composite-whistle_core")
+
+include(":test")
+project(":test").projectDir = file("../../plugins/test")
+
+rootProject.children.forEach {
+    it.buildFileName = "se-build.gradle"
+}
+
+gradle.allprojects {
+    apply {
+        plugin("maven-publish")
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    pluginManager.withPlugin("java") {
+        java {
+            withSourcesJar()
+        }
+
+        publishing {
+            publications {
+                maven(MavenPublication){
+                    from components.java
+                }
+            }
+        }
+    }
+}

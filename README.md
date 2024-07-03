@@ -1,3 +1,5 @@
+# PLEASE SEE [`se-build/README.md`](https://github.com/ShahimEssaid/healthcare-data-harmonization/tree/master-se/se-builds)
+
 # Whistle Data Transformation Language
 
 # Introduction

@@ -1,0 +1,29 @@
+plugins {
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation( "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization:runtime")
+    implementation( "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins.harmonization:hdev2")
+    implementation( "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins:logging")
+    implementation( "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins:test")
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass.set("com.google.cloud.verticals.foundations.dataharmonization.Main")
+    applicationName "whistle-cli"
+}

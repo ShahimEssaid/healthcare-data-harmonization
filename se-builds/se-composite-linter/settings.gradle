@@ -1,0 +1,34 @@
+rootProject.name = 'se-composite-linter'
+
+includeBuild("../se-composite-whistle_core")
+
+include(":linter")
+project(":linter").projectDir = file("../../tools/linter")
+
+rootProject.children.forEach {
+    it.buildFileName = "se-build.gradle"
+}
+
+gradle.allprojects {
+    apply {
+        plugin("maven-publish")
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    pluginManager.withPlugin("java") {
+        java {
+            withSourcesJar()
+        }
+
+        publishing {
+            publications {
+                maven(MavenPublication){
+                    from components.java
+                }
+            }
+        }
+    }
+}
+
