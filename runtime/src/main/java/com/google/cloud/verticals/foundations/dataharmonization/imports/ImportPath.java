@@ -153,7 +153,9 @@ public final class ImportPath implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("%s://%s", loader, absolutePath);
+    //TODO SE: Fix for Windows path strings and compatibility with URI
+    String path = absolutePath.toString().replaceAll("\\\\", "/");
+    return String.format("%s://%s", loader, path);
   }
 
   public Path getImportsRoot() {
