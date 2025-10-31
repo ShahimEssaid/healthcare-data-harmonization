@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'idea'
     id 'antlr'
+    id 'com.vanniktech.maven.publish' version '0.34.0'
 }
 
 // SE: change group to allow publishing to OSSRH
@@ -12,15 +13,12 @@ mainClassName = 'com.google.cloud.verticals.foundations.dataharmonization.transp
 // SE:
 sourceSets {
     main {
-        java {
-            srcDirs += "build/generated/source/proto/main/antlr"
+        java { //transpiler/build/generated-src/antlr/main
+//            srcDirs += "build/generated-src/antlr/main"
         }
     }
 }
 
-tasks.named("sourcesJar").configure {
-    dependsOn("generateGrammarSource")
-}
 
 dependencies {
     implementation project(":proto")
@@ -42,3 +40,46 @@ generateGrammarSource {
     arguments += ['-visitor']
 }
 compileJava.dependsOn generateGrammarSource
+
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "CentralSnapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+    maven {
+        name = "GitHubSEPackages"
+        url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+    }
+}
+
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+
+mavenPublishing {
+    publishToMavenCentral()
+    configure(new JavaLibrary(new JavadocJar.None(), true))
+}
+
+publishing {
+    java {
+        withSourcesJar()
+//            withJavadocJar()
+    }
+    repositories {
+        maven {
+            name = "GitHubSEPackages"
+            url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+            credentials(PasswordCredentials)
+        }
+    }
+}
+
+
+tasks.named("sourcesJar").configure {
+    dependsOn("generateGrammarSource")
+}

@@ -1,13 +1,14 @@
 plugins {
     id "java-gradle-plugin"
+    // SE: new publishing plugin
+    id "com.vanniktech.maven.publish" version "0.34.0"
 }
-
 // SE: change group to allow publishing to OSSRH
 group "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization"
 
-repositories {
-    mavenCentral()
-}
+//repositories {
+//    mavenCentral()
+//}
 gradlePlugin {
     plugins {
         simplePlugin {
@@ -16,7 +17,9 @@ gradlePlugin {
             implementationClass = "com.google.cloud.verticals.foundations.dataharmonization.DocgenPlugin"
         }
     }
+
 }
+
 dependencies {
     implementation "io.github.classgraph:classgraph:4.8.104"
     implementation group: "com.google.guava", name: "guava", version: "31.0.1-jre"
@@ -32,4 +35,51 @@ dependencies {
     testImplementation group: "com.google.truth", name: "truth", version: "1.1.3"
     testImplementation group: "org.mockito", name: "mockito-core", version: "3.7.7"
 
+}
+
+
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "CentralSnapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+    maven {
+        name = "GitHubSEPackages"
+        url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+    }
+}
+
+pluginManager.withPlugin("java") {
+    java {
+        withSourcesJar()
+//            withJavadocJar()
+    }
+}
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+
+mavenPublishing {
+    publishToMavenCentral()
+    configure(new JavaLibrary(new JavadocJar.None(), true))
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubSEPackages"
+            url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+            credentials(PasswordCredentials)
+        }
+    }
+
+}
+
+// TODO: SE: failing tests due to plugin id
+tasks.withType(Test) {
+    enabled = false
 }

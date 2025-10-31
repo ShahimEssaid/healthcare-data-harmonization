@@ -27,3 +27,4 @@ application {
     mainClass.set("com.google.cloud.verticals.foundations.dataharmonization.Main")
     applicationName "whistle-cli"
 }
+

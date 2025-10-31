@@ -12,7 +12,7 @@ import "./terminologyFns.wstl"
 //   Boolean: return true when str is a Number; otherwise false
 //
 def IsNumber(required str) {
-  $this: matchesRegex(str, "^\\d*\\.?\\d+$")
+  $this: matchesRegex(str, "^[-+]?\\d*\\.?\\d+$")
 }
 
 // Description: Constructs Extension datatype

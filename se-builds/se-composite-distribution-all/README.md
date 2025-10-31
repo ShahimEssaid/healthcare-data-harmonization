@@ -8,7 +8,7 @@ You need to have Java already installed on your machine.  Whistle's README state
 
 Run the following to generate the distribution:
 
-`./gradlew build`
+`./gradlew clean build installDist`
 
 ## Using the distribution
 

@@ -1,4 +1,3 @@
-import org.gradle.api.publish.maven.MavenPublication
 
 rootProject.name = 'se-composite-plugin-harmonization'
 
@@ -17,25 +16,25 @@ rootProject.children.forEach {
     it.buildFileName = "se-build.gradle"
 }
 
-gradle.allprojects {
-    apply {
-        plugin("maven-publish")
-    }
-    repositories {
-        mavenCentral()
-    }
-
-    pluginManager.withPlugin("java") {
-        java {
-            withSourcesJar()
-        }
-
-        publishing {
-            publications {
-                maven(MavenPublication){
-                    from components.java
-                }
-            }
-        }
-    }
-}
+//gradle.allprojects {
+//    apply {
+//        plugin("maven-publish")
+//    }
+//    repositories {
+//        mavenCentral()
+//    }
+//
+//    pluginManager.withPlugin("java") {
+//        java {
+//            withSourcesJar()
+//        }
+//
+//        publishing {
+//            publications {
+//                maven(MavenPublication){
+//                    from components.java
+//                }
+//            }
+//        }
+//    }
+//}

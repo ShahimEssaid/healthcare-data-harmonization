@@ -1,26 +1,32 @@
-buildscript {
-    dependencies {
-        if (gradle.ext.docgenExists) {
-            classpath "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization:docgen"
-        }
-    }
-}
+// TODO: SE: fix:
+//* What went wrong:
+//Could not create task ':hdev2:dropMavenCentralDeployment'.
+//Cannot set the value of task ':hdev2:dropMavenCentralDeployment' property 'buildService' of type com.vanniktech.maven.publish.central.MavenCentralBuildService using a provider of type com.vanniktech.maven.publish.central.MavenCentralBuildService.
+
+//buildscript {
+//    dependencies {
+//        if (gradle.ext.docgenExists) {
+//            classpath "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization:docgen"
+//        }
+//    }
+//}
 
 plugins {
     id 'java-library'
     id 'idea'
+    id "com.vanniktech.maven.publish" version "0.34.0"
 }
 
-if (gradle.ext.docgenExists) {
-    apply plugin: "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.docgen"
-    docgen.destinationDirectory = file("${project.projectDir.toPath().parent.parent.parent}/doc")
-}
+//if (gradle.ext.docgenExists) {
+//    apply plugin: "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.docgen"
+//    docgen.destinationDirectory = file("${project.projectDir.toPath().parent.parent.parent}/doc")
+//}
 
 group "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins.harmonization"
 
-repositories {
-    mavenCentral()
-}
+//repositories {
+//    mavenCentral()
+//}
 
 dependencies {
     // TODO(): Set up versioning
@@ -36,3 +42,40 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation 'com.google.guava:guava-testlib:25.1-jre'
 }
+
+
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "CentralSnapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+    maven {
+        name = "GitHubSEPackages"
+        url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+    }
+}
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+
+mavenPublishing {
+    publishToMavenCentral()
+    configure(new JavaLibrary(new JavadocJar.None(), true))
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubSEPackages"
+            url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+            credentials(PasswordCredentials)
+        }
+    }
+
+}
+
+

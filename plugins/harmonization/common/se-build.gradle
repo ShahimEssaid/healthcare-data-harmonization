@@ -1,12 +1,13 @@
 plugins {
     id "java-library"
+    id "com.vanniktech.maven.publish" version "0.34.0"
 }
 
 group "${groupIdPrefix}.com.google.cloud.verticals.foundations.dataharmonization.plugins.harmonization"
-
-repositories {
-    mavenCentral()
-}
+//
+//repositories {
+//    mavenCentral()
+//}
 
 dependencies {
     // TODO(): Set up versioning
@@ -25,3 +26,37 @@ dependencies {
     testImplementation group: "org.mockito", name: "mockito-core", version: "3.7.7"
     testImplementation group: 'com.google.truth', name: 'truth', version: '1.0.1'
 }
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "CentralSnapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+    maven {
+        name = "GitHubSEPackages"
+        url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+    }
+}
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+
+mavenPublishing {
+    publishToMavenCentral()
+    configure(new JavaLibrary(new JavadocJar.None(), true))
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubSEPackages"
+            url = uri("https://maven.pkg.github.com/ShahimEssaid/m2")
+            credentials(PasswordCredentials)
+        }
+    }
+
+}
+
